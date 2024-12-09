@@ -1,0 +1,46 @@
+name: 'SLSA Verification'
+description: 'Github action to verify SLSA for a given artifact'
+author: 'Reetika Mallavarapu'
+inputs:
+  HARNESS_ACCOUNT_URL:
+    description: 'Harness Account Url'
+    required: true
+  HARNESS_ACCOUNT_ID:
+    description: 'Harness Account ID'
+    required: true
+  HARNESS_ORG_ID:
+    description: 'Harness Organization ID'
+    required: true
+  HARNESS_PROJECT_ID:
+    description: 'Harness Project ID'
+    required: true
+  HARNESS_API_KEY:
+    description: 'Auth token for authentication with Harness'
+    required: true
+  TARGET:
+    description: 'Image or repo source'
+    required: true
+  VERIFY:
+    description: 'If verification is required'
+    type: boolean
+  KMS_KEY:
+    description: 'Kms Key'
+    required: false
+
+runs:
+  using: 'docker'
+  image: 'harness/slsa-plugin:github'
+  entrypoint: '/bin/slsa-plugin'
+  args: 
+   - github-slsa-verification
+  env:
+    ACTION_NAME: 'SLSA Verification'
+    HARNESS_ACCOUNT_URL: ${{ inputs.HARNESS_ACCOUNT_URL }}
+    HARNESS_ACCOUNT_ID: ${{ inputs.HARNESS_ACCOUNT_ID }}
+    HARNESS_ORG_ID: ${{ inputs.HARNESS_ORG_ID }}
+    HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
+    HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
+    SLSA_SOURCE: ${{ inputs.TARGET }}
+    PLUGIN_TYPE: 'github-slsa-verification'
+    VERIFY_SLSA: ${{ inputs.VERIFY }}
+    KMS_KEY: ${{ inputs.KMS_KEY }}

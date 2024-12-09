@@ -1,0 +1,47 @@
+name: 'SLSA Provenance Generation'
+description: 'Github action to generate SLSA for a given artifact'
+author: 'Reetika Mallavarapu'
+inputs:
+  HARNESS_ACCOUNT_URL:
+    description: 'Harness Account Url'
+    required: true
+  HARNESS_ACCOUNT_ID:
+    description: 'Harness Account ID'
+    required: true
+  HARNESS_ORG_ID:
+    description: 'Harness Organization ID'
+    required: true
+  HARNESS_PROJECT_ID:
+    description: 'Harness Project ID'
+    required: true
+  HARNESS_API_KEY:
+    description: 'Auth token for authentication with Harness'
+    required: true
+  TARGET:
+    description: 'Image or repo source'
+    required: true
+  ATTEST:
+    description: 'If attestation is required'
+    type: boolean
+  KMS_KEY:
+    description: 'Kms Key'
+    required: false
+
+runs:
+  using: 'docker'
+  image: 'harness/slsa-plugin:github'
+  entrypoint: '/bin/slsa-plugin'
+  args: 
+   - github-provenance
+  env:
+    ACTION_NAME: 'SLSA Provenance Generation'
+    HARNESS_ACCOUNT_URL: ${{ inputs.HARNESS_ACCOUNT_URL }}
+    HARNESS_ACCOUNT_ID: ${{ inputs.HARNESS_ACCOUNT_ID }}
+    HARNESS_ORG_ID: ${{ inputs.HARNESS_ORG_ID }}
+    HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
+    HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
+    SLSA_SOURCE: ${{ inputs.TARGET }}
+    PLUGIN_TYPE: 'github-provenance'
+    ATTEST_SLSA: ${{ inputs.ATTEST }}
+    KMS_KEY: ${{ inputs.KMS_KEY }}
+    POLICY_SET_REF: ${{ inputs.POLICY_SET_REF }}
