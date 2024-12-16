@@ -1,4 +1,9 @@
 # Harness GitHub Actions
+GitHub Actions to integrate Harness capabilities with GitHub Workflows.
+
+[![Documentation](https://img.shields.io/badge/Docs-View-blue?logo=read-the-docs)](https://developer.harness.io/)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://github.com/harness/github-actions/blob/main/LICENSE.md)
+
 
 This GitHub Action provides a set of sub-actions for:
 
