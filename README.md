@@ -99,7 +99,7 @@ The sub-action `sbom-ingestion` is responsible for ingesting an existing SBOM an
 
 ```yaml
 - name: SBOM Ingestion
-  uses: harness/sbom-ingestion
+  uses: harness/github-actions/sbom-ingestion
   with:
     HARNESS_ACCOUNT_URL: https://myaccount.harness.io
     HARNESS_ACCOUNT_ID: my_account_id_9YpRharzPs
@@ -133,7 +133,7 @@ The sub-action `sbom-policy-enforcement` verifies the SBOM attestation and enfor
 
 ```yaml
 - name: SBOM Policy Enforcement
-  uses: harness/sbom-policy-enforcement
+  uses: harness/github-actions/sbom-policy-enforcement
   with:
     HARNESS_ACCOUNT_URL: https://myaccount.harness.io
     HARNESS_ACCOUNT_ID: my_account_id_9YpRharzPs
@@ -168,7 +168,7 @@ The sub-action `slsa-generation` is responsible for generating SLSA provenance a
 
 ```yaml
 - name: SLSA Provenance Generation
-  uses: harness/slsa-generation
+  uses: harness/github-actions/slsa-generation
   with:
     HARNESS_ACCOUNT_URL: https://myaccount.harness.io
     HARNESS_ACCOUNT_ID: my_account_id_9YpRharzPs
@@ -200,7 +200,7 @@ The sub-action `slsa-verification` verifies the SLSA provenance attestation by p
 
 ```yaml
 - name: SLSA Verification
-  uses: harness/slsa-verification
+  uses: harness/github-actions/slsa-verification
   with:
     HARNESS_ACCOUNT_URL: https://myaccount.harness.io
     HARNESS_ACCOUNT_ID: my_account_id_9YpRharzPs
