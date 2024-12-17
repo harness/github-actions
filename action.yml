@@ -1,0 +1,3 @@
+name: 'Harness Github Actions'
+description: 'Github actions to generate, attest, verify SBOM and SLSA. You can also enforce license policies on SBOM'
+author: 'Reetika Mallavarapu'
