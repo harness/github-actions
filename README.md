@@ -46,6 +46,7 @@ To use any of the sub-actions and perform operations successfully, you need the 
 | `HARNESS_ORG_ID`        | `SCS`                                       | The identifier for your Harness organization.                        | Yes         |
 | `HARNESS_PROJECT_ID`    | `SCS_ORG`                                  | The identifier for your Harness project within the organization.     | Yes         |
 | `HARNESS_API_KEY`       | `${{ secrets.SCS_API_KEY }}`                | The API key for authenticating with Harness. Create an API key using a Service Account (recommended) or a Personal Account , and then add the key to GitHub Actions Secrets with "HARNESS_API_KEY" as the key name. | Yes         |
+| `VAULT_ADDR`   | `https://myvault.example.com`               | The URL of your Vault.	                                     | No         |
 
 3. **Security Keys**: For attestation generation and verification, Key pair is required. The key should be generated using Cosign of type `ecdsa-P256`. Currently, HashiCorp Vault is supported for storing and retrieving the key. Additional Key Management Services (KMS) will be supported in the future.
 
@@ -54,7 +55,7 @@ To use any of the sub-actions and perform operations successfully, you need the 
 ## SBOM Generation and Attestation
 > harness/github-actions/sbom-generation
 
-The sub-action `sbom-generation` is responsible for generating the Software Bill of Materials (SBOM) and optionally attesting it. The generated SBOM is saved to Harness and can be found in the **Artifacts** section of the **SCS (Software Supply Chain Security)** module. If attestation is enabled, the SBOM attestation will be signed, and the `.att` attestation file will be pushed to the configured container registry.
+The sub-action `harness/github-actions/sbom-generation` is responsible for generating the Software Bill of Materials (SBOM) and optionally attesting it. The generated SBOM is saved to Harness and can be found in the **Artifacts** section of the **SCS (Software Supply Chain Security)** module. If attestation is enabled, the SBOM attestation will be signed, and the `.att` attestation file will be pushed to the configured container registry. For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/sbom/generate-sbom-with-github-actions).
 
 **Note:** The signing key must be Cosign generated and stored in **HashiCorp Vault**. Currently, only HashiCorp Vault is supported, but more Key Management Systems (KMS) will be supported in the near future.
 
@@ -69,6 +70,7 @@ The sub-action `sbom-generation` is responsible for generating the Software Bill
     HARNESS_ORG_ID: my_org_id_default
     HARNESS_PROJECT_ID: example_project_id
     HARNESS_API_KEY: ${{ secrets.API_KEY_SAVED_AS_GH_SECRET }}
+    VAULT_ADDR: ${{ secrets.VAULT_URL }}
     TARGET: example_image:image_tag
     TOOL: Syft
     FORMAT: spdx-json
@@ -78,7 +80,7 @@ The sub-action `sbom-generation` is responsible for generating the Software Bill
 
 ### Configuration
 
-Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `sbom-generation` sub-action.
+Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `harness/github-actions/sbom-generation` sub-action.
 
 | **Key**         | **Value Example**       | **Description**                                            | **Required** |
 |-----------------|-------------------------|------------------------------------------------------------|-------------|
@@ -91,7 +93,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 ## SBOM Ingestion and Attestation
 > harness/github-actions/sbom-ingestion
 
-The sub-action `sbom-ingestion` is responsible for ingesting an existing SBOM and optionally attesting it. The SBOM will be saved to Harness. If attestation is enabled, the SBOM attestation will be signed, and the .att file will be pushed to the configured container registry.
+The sub-action `harness/github-actions/sbom-ingestion` is responsible for ingesting an existing SBOM and optionally attesting it. The SBOM will be saved to Harness. If attestation is enabled, the SBOM attestation will be signed, and the .att file will be pushed to the configured container registry.  For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/sbom/ingest-sbom-with-github-actions).
 
 **Note:** The signing key must be Cosign generated and stored stored in **HashiCorp Vault**. Currently, only HashiCorp Vault is supported, but more Key Management Systems (KMS) will be supported in the near future.
 
@@ -106,6 +108,7 @@ The sub-action `sbom-ingestion` is responsible for ingesting an existing SBOM an
     HARNESS_ORG_ID: my_org_id_default
     HARNESS_PROJECT_ID: example_project_id
     HARNESS_API_KEY: ${{ secrets.API_KEY_SAVED_AS_GH_SECRET }}
+    VAULT_ADDR: ${{ secrets.VAULT_URL }}
     TARGET: <image>:<tag>
     SBOM_FILE_PATH: <path_to_sbom_file>
     ATTEST: true
@@ -114,7 +117,7 @@ The sub-action `sbom-ingestion` is responsible for ingesting an existing SBOM an
 
 ### Configuration
 
-Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `sbom-ingestion` sub-action.
+Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `harness/github-actions/sbom-ingestion` sub-action.
 
 | **Key**           | **Value Example**         | **Description**                                               | **Required** |
 |-------------------|---------------------------|---------------------------------------------------------------|-------------|
@@ -127,7 +130,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 ## SBOM Verification and Policy Enforcement
 > harness/github-actions/sbom-policy-enforcement
 
-The sub-action `sbom-policy-enforcement` verifies the SBOM attestation and enforces policies on the SBOM. The policies applied are **Harness SBOM Policies**. For more information on creating and managing SBOM policies, refer to the [Harness SBOM Policies Documentation](https://developer.harness.io/docs/software-supply-chain-assurance/sbom-policies/create-sbom-policies).
+The sub-action `harness/github-actions/sbom-policy-enforcement` verifies the SBOM attestation and enforces policies on the SBOM. The policies applied are **Harness SBOM Policies**. For more information on creating and managing SBOM policies, refer to the [Harness SBOM Policies Documentation](https://developer.harness.io/docs/software-supply-chain-assurance/sbom-policies/create-sbom-policies). For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/sbom-policies/enforce-sbom-policies-with-gitHub-actions).
 
 ### Usage Example
 
@@ -140,6 +143,7 @@ The sub-action `sbom-policy-enforcement` verifies the SBOM attestation and enfor
     HARNESS_ORG_ID: my_org_id_default
     HARNESS_PROJECT_ID: example_project_id
     HARNESS_API_KEY: ${{ secrets.API_KEY_SAVED_AS_GH_SECRET }}
+    VAULT_ADDR: ${{ secrets.VAULT_URL }}
     TARGET: example_image:latest
     VERIFY: true
     POLICY_SET_REF: github_opa_policy
@@ -148,7 +152,7 @@ The sub-action `sbom-policy-enforcement` verifies the SBOM attestation and enfor
 
 ### Configuration
 
-Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `sbom-policy-enforcement` sub-action.
+Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `harness/github-actions/sbom-policy-enforcement` sub-action.
 
 | **Key**            | **Value Example**            | **Description**                                                                 | **Required** |
 |--------------------|------------------------------|---------------------------------------------------------------------------------|-------------|
@@ -162,7 +166,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 ## SLSA Provenance Generation and Attestation
 > harness/github-actions/slsa-generation
 
-The sub-action `slsa-generation` is responsible for generating SLSA provenance and optionally attesting it. If attestation is enabled, the `.att` attestation file will be pushed to the configured container registry. The generated SLSA provenance can be found in the **Artifacts** section of the Harness **SCS (Software Supply Chain Security)** module.
+The sub-action `harness/github-actions/slsa-generation` is responsible for generating SLSA provenance and optionally attesting it. If attestation is enabled, the `.att` attestation file will be pushed to the configured container registry. The generated SLSA provenance can be found in the **Artifacts** section of the Harness **SCS (Software Supply Chain Security)** module. For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/slsa/generate-slsa-with-github-actions).
 
 ### Usage Example
 
@@ -175,6 +179,7 @@ The sub-action `slsa-generation` is responsible for generating SLSA provenance a
     HARNESS_ORG_ID: my_org_id_default
     HARNESS_PROJECT_ID: example_project_id
     HARNESS_API_KEY: ${{ secrets.API_KEY_SAVED_AS_GH_SECRET }}
+    VAULT_ADDR: ${{ secrets.VAULT_URL }}
     TARGET: example_image:latest
     ATTEST: true
     KMS_KEY: path/to/your/key
@@ -182,7 +187,7 @@ The sub-action `slsa-generation` is responsible for generating SLSA provenance a
 
 ### Configuration
 
-Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `slsa-generation` sub-action.
+Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `harness/github-actions/slsa-generation` sub-action.
 
 | **Key**           | **Value Example**         | **Description**                                                                      | **Required** |
 |-------------------|---------------------------|--------------------------------------------------------------------------------------|-------------|
@@ -194,7 +199,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 ## SLSA Provenance Verification
 > harness/github-actions/slsa-verification
 
-The sub-action `slsa-verification` verifies the SLSA provenance attestation by pulling the `.att` file from the configured container registry. It uses the public key from the key pair that was used for signing the attestation to perform the verification.
+The sub-action `harness/github-actions/slsa-verification` verifies the SLSA provenance attestation by pulling the `.att` file from the configured container registry. It uses the public key from the key pair that was used for signing the attestation to perform the verification. For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/slsa/verify-slsa-with-github-actions).
 
 ### Usage Example
 
@@ -207,6 +212,7 @@ The sub-action `slsa-verification` verifies the SLSA provenance attestation by p
     HARNESS_ORG_ID: my_org_id_default
     HARNESS_PROJECT_ID: example_project_id
     HARNESS_API_KEY: ${{ secrets.API_KEY_SAVED_AS_GH_SECRET }}
+    VAULT_ADDR: ${{ secrets.VAULT_URL }}
     TARGET: example_image:latest
     VERIFY: true
     KMS_KEY: path/to/your/key
@@ -214,7 +220,7 @@ The sub-action `slsa-verification` verifies the SLSA provenance attestation by p
 
 ### Configuration
 
-Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `slsa-verification` sub-action.
+Make sure to include the required configurations from the [Requirements](#requirements) section in your workflow. Below are the specific configurations for the `harness/github-actions/slsa-verification` sub-action.
 
 | **Key**           | **Value Example**         | **Description**                                                                           | **Required** |
 |-------------------|---------------------------|-------------------------------------------------------------------------------------------|-------------|
