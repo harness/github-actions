@@ -53,7 +53,7 @@ To use any of the sub-actions and perform operations successfully, you need the 
 ---
 
 ## SBOM Generation and Attestation
-> harness/github-actions/sbom-generation
+> harness/github-actions/sbom-generation@1.1.0
 
 The sub-action `harness/github-actions/sbom-generation` is responsible for generating the Software Bill of Materials (SBOM) and optionally attesting it. The generated SBOM is saved to Harness and can be found in the **Artifacts** section of the **SCS (Software Supply Chain Security)** module. If attestation is enabled, the SBOM attestation will be signed, and the `.att` attestation file will be pushed to the configured container registry. For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/sbom/generate-sbom-with-github-actions).
 
@@ -63,7 +63,7 @@ The sub-action `harness/github-actions/sbom-generation` is responsible for gener
 
 ```yaml
 - name: SBOM Generation
-  uses: harness/github-actions/sbom-generation
+  uses: harness/github-actions/sbom-generation@1.1.0
   with:
     HARNESS_ACCOUNT_URL: https://myaccount.harness.io
     HARNESS_ACCOUNT_ID: my_account_id_9YpRharzPs
@@ -91,7 +91,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 | `KMS_KEY`      | `path/to/my/key`        | Path to the Private key used for signing the attestation.          | No          |
 
 ## SBOM Ingestion and Attestation
-> harness/github-actions/sbom-ingestion
+> harness/github-actions/sbom-ingestion@1.1.0
 
 The sub-action `harness/github-actions/sbom-ingestion` is responsible for ingesting an existing SBOM and optionally attesting it. The SBOM will be saved to Harness. If attestation is enabled, the SBOM attestation will be signed, and the .att file will be pushed to the configured container registry.  For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/sbom/ingest-sbom-with-github-actions).
 
@@ -101,7 +101,7 @@ The sub-action `harness/github-actions/sbom-ingestion` is responsible for ingest
 
 ```yaml
 - name: SBOM Ingestion
-  uses: harness/github-actions/sbom-ingestion
+  uses: harness/github-actions/sbom-ingestion@1.1.0
   with:
     HARNESS_ACCOUNT_URL: https://myaccount.harness.io
     HARNESS_ACCOUNT_ID: my_account_id_9YpRharzPs
@@ -128,7 +128,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 
 
 ## SBOM Verification and Policy Enforcement
-> harness/github-actions/sbom-policy-enforcement
+> harness/github-actions/sbom-policy-enforcement@1.1.0
 
 The sub-action `harness/github-actions/sbom-policy-enforcement` verifies the SBOM attestation and enforces policies on the SBOM. The policies applied are **Harness SBOM Policies**. For more information on creating and managing SBOM policies, refer to the [Harness SBOM Policies Documentation](https://developer.harness.io/docs/software-supply-chain-assurance/sbom-policies/create-sbom-policies). For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/sbom-policies/enforce-sbom-policies-with-gitHub-actions).
 
@@ -136,7 +136,7 @@ The sub-action `harness/github-actions/sbom-policy-enforcement` verifies the SBO
 
 ```yaml
 - name: SBOM Policy Enforcement
-  uses: harness/github-actions/sbom-policy-enforcement
+  uses: harness/github-actions/sbom-policy-enforcement@1.1.0
   with:
     HARNESS_ACCOUNT_URL: https://myaccount.harness.io
     HARNESS_ACCOUNT_ID: my_account_id_9YpRharzPs
@@ -164,7 +164,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 ---
 
 ## SLSA Provenance Generation and Attestation
-> harness/github-actions/slsa-generation
+> harness/github-actions/slsa-generation@1.1.0
 
 The sub-action `harness/github-actions/slsa-generation` is responsible for generating SLSA provenance and optionally attesting it. If attestation is enabled, the `.att` attestation file will be pushed to the configured container registry. The generated SLSA provenance can be found in the **Artifacts** section of the Harness **SCS (Software Supply Chain Security)** module. For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/slsa/generate-slsa-with-github-actions).
 
@@ -172,7 +172,7 @@ The sub-action `harness/github-actions/slsa-generation` is responsible for gener
 
 ```yaml
 - name: SLSA Provenance Generation
-  uses: harness/github-actions/slsa-generation
+  uses: harness/github-actions/slsa-generation@1.1.0
   with:
     HARNESS_ACCOUNT_URL: https://myaccount.harness.io
     HARNESS_ACCOUNT_ID: my_account_id_9YpRharzPs
@@ -197,7 +197,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 
 
 ## SLSA Provenance Verification
-> harness/github-actions/slsa-verification
+> harness/github-actions/slsa-verification@1.1.0
 
 The sub-action `harness/github-actions/slsa-verification` verifies the SLSA provenance attestation by pulling the `.att` file from the configured container registry. It uses the public key from the key pair that was used for signing the attestation to perform the verification. For more details, refer to [Harness documentation](https://developer.harness.io/docs/software-supply-chain-assurance/slsa/verify-slsa-with-github-actions).
 
@@ -205,7 +205,7 @@ The sub-action `harness/github-actions/slsa-verification` verifies the SLSA prov
 
 ```yaml
 - name: SLSA Verification
-  uses: harness/github-actions/slsa-verification
+  uses: harness/github-actions/slsa-verification@1.1.0
   with:
     HARNESS_ACCOUNT_URL: https://myaccount.harness.io
     HARNESS_ACCOUNT_ID: my_account_id_9YpRharzPs
