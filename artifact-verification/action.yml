@@ -65,7 +65,7 @@ runs:
         fi
         PLUGIN_IMAGE="${{ inputs.PLUGIN_IMAGE }}"
         ENV_FILE="$(mktemp)"
-        env | grep -E '^(HARNESS_|SIGNING_|SOURCE_|PLUGIN_|SSCA_|VAULT_|DOCKER_|KMS_|OIDC_|FULCIO_)' > "$ENV_FILE" || true
+        env | grep -E '^(HARNESS_|GITHUB_|SIGNING_|SOURCE_|PLUGIN_|SSCA_|VAULT_|DOCKER_|REPO_|REGISTRY_|KMS_|ARTIFACT_|OIDC_|FULCIO_)' > "$ENV_FILE" || true
         if [ -n "${PLUGIN_NON_HARNESS_OIDC_TOKEN:-}" ]; then
           echo "PLUGIN_NON_HARNESS_OIDC_TOKEN=${PLUGIN_NON_HARNESS_OIDC_TOKEN}" >> "$ENV_FILE"
         fi
