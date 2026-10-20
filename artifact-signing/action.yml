@@ -12,8 +12,8 @@ inputs:
     required: true
   HARNESS_API_KEY:
     required: true
-  TARGET:
-    description: 'Container image or artifact to sign'
+  SIGNING_SOURCE:
+    description: 'Image or repo source'
     required: true
   KMS_KEY:
     required: false
@@ -44,7 +44,7 @@ runs:
         HARNESS_ORG_ID: ${{ inputs.HARNESS_ORG_ID }}
         HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
-        SIGNING_SOURCE: ${{ inputs.TARGET }}
+        SIGNING_SOURCE: ${{ inputs.SIGNING_SOURCE }}
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         KMS_KEY: ${{ inputs.KMS_KEY }}
         VAULT_ADDR: ${{ inputs.VAULT_ADDR }}

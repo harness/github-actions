@@ -17,8 +17,8 @@ inputs:
   HARNESS_API_KEY:
     description: 'Auth token for authentication with Harness'
     required: true
-  TARGET:
-    description: 'Image or repo source (maps to SLSA_SOURCE for the plugin)'
+  SLSA_SOURCE:
+    description: 'Image or repo source'
     required: true
   VERIFY:
     description: 'If verification is required'
@@ -55,7 +55,7 @@ runs:
         HARNESS_ORG_ID: ${{ inputs.HARNESS_ORG_ID }}
         HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
-        SLSA_SOURCE: ${{ inputs.TARGET }}
+        SLSA_SOURCE: ${{ inputs.SLSA_SOURCE }}
         PLUGIN_TYPE: 'github-slsa-verification'
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         VERIFY_SLSA: ${{ inputs.VERIFY }}

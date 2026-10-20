@@ -17,8 +17,8 @@ inputs:
   HARNESS_API_KEY:
     description: 'Auth token for authentication with Harness'
     required: true
-  TARGET:
-    description: 'Image or repo source (maps to SBOM_SOURCE for the plugin)'
+  SBOM_SOURCE:
+    description: 'Image or repo source'
     required: true
   SBOM_FILE_PATH:
     description: 'SBOM file path'
@@ -58,7 +58,7 @@ runs:
         HARNESS_ORG_ID: ${{ inputs.HARNESS_ORG_ID }}
         HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
-        SBOM_SOURCE: ${{ inputs.TARGET }}
+        SBOM_SOURCE: ${{ inputs.SBOM_SOURCE }}
         SBOM_FILE_PATH: ${{ inputs.SBOM_FILE_PATH }}
         PLUGIN_SBOMDESTINATION: ${{ inputs.SBOM_FILE_PATH }}
         PLUGIN_TYPE: 'github-orchestrate'
