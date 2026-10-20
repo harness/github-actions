@@ -50,7 +50,7 @@ runs:
   using: 'composite'
   steps:
     - name: SLSA Verification
-      uses: harness/github-actions/run-plugin-container@main
+      uses: harness/github-actions/run-plugin-container@SSCA-8414
       env:
         ACTION_NAME: 'SLSA Verification'
         HARNESS_ACCOUNT_URL: ${{ inputs.HARNESS_ACCOUNT_URL }}
