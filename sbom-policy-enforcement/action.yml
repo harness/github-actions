@@ -60,7 +60,6 @@ runs:
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
         SBOM_SOURCE: ${{ inputs.SBOM_SOURCE }}
         PLUGIN_TYPE: 'github-enforce'
-        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         VERIFY_SBOM: ${{ inputs.VERIFY_SBOM }}
         POLICY_SET_REF: ${{ inputs.POLICY_SET_REF }}
         KMS_KEY: ${{ inputs.KMS_KEY }}

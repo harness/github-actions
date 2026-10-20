@@ -61,7 +61,6 @@ runs:
         SBOM_SOURCE: ${{ inputs.SBOM_SOURCE }}
         PLUGIN_SBOMDESTINATION: ${{ inputs.SBOM_FILE_PATH }}
         PLUGIN_TYPE: 'github-orchestrate'
-        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         PLUGIN_MODE: 'ingestion'
         ATTEST_SBOM: ${{ inputs.ATTEST_SBOM }}
         KMS_KEY: ${{ inputs.KMS_KEY }}

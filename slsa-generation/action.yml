@@ -57,7 +57,6 @@ runs:
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
         SLSA_SOURCE: ${{ inputs.SLSA_SOURCE }}
         PLUGIN_TYPE: 'github-provenance'
-        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         ATTEST_SLSA: ${{ inputs.ATTEST_SLSA }}
         KMS_KEY: ${{ inputs.KMS_KEY }}
         VAULT_ADDR: ${{ inputs.VAULT_ADDR }}

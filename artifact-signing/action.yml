@@ -45,7 +45,6 @@ runs:
         HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
         SIGNING_SOURCE: ${{ inputs.SIGNING_SOURCE }}
-        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         KMS_KEY: ${{ inputs.KMS_KEY }}
         VAULT_ADDR: ${{ inputs.VAULT_ADDR }}
         VAULT_TOKEN: ${{ inputs.VAULT_TOKEN }}

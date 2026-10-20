@@ -68,7 +68,6 @@ runs:
         SBOM_FORMAT: ${{ inputs.FORMAT }}
         SBOM_SOURCE: ${{ inputs.SBOM_SOURCE }}
         PLUGIN_TYPE: 'github-orchestrate'
-        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         PLUGIN_MODE: 'generation'
         ATTEST_SBOM: ${{ inputs.ATTEST_SBOM }}
         KMS_KEY: ${{ inputs.KMS_KEY }}
