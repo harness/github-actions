@@ -56,7 +56,7 @@ runs:
   using: 'composite'
   steps:
     - name: SBOM Generation
-      shell: bash
+      uses: ./run-plugin-container
       env:
         ACTION_NAME: 'SBOM Generation'
         HARNESS_ACCOUNT_URL: ${{ inputs.HARNESS_ACCOUNT_URL }}
@@ -77,33 +77,9 @@ runs:
         OIDC_PROVIDER: ${{ inputs.OIDC_PROVIDER }}
         DOCKER_USERNAME: ${{ inputs.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ inputs.DOCKER_PASSWORD }}
-      run: |
-        set -euo pipefail
-        if [ "${OIDC_PROVIDER:-}" = "non-harness" ]; then
-          if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]; then
-            echo "keyless signing requires permissions id-token write in the calling workflow" >&2
-            exit 1
-          fi
-          PLUGIN_NON_HARNESS_OIDC_TOKEN="$(curl -sSf \
-            -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=harness-fulcio" | jq -r '.value')"
-          export PLUGIN_NON_HARNESS_OIDC_TOKEN
-        fi
-        PLUGIN_IMAGE="${{ inputs.PLUGIN_IMAGE }}"
-        ENV_FILE="$(mktemp)"
-        env | grep -E '^(HARNESS_|GITHUB_|SBOM_|SBOM_FILE|SOURCE_|PLUGIN_|SSCA_|VAULT_|DOCKER_|ATTEST_|REPO_|REGISTRY_|KMS_|ARTIFACT_|OIDC_|FULCIO_)' > "$ENV_FILE" || true
-        if [ -n "${PLUGIN_NON_HARNESS_OIDC_TOKEN:-}" ]; then
-          echo "PLUGIN_NON_HARNESS_OIDC_TOKEN=${PLUGIN_NON_HARNESS_OIDC_TOKEN}" >> "$ENV_FILE"
-        fi
-        DOCKER_SOCK_MOUNT=()
-        case "${SOURCE_TYPE:-docker}" in
-          docker|image) DOCKER_SOCK_MOUNT=(-v /var/run/docker.sock:/var/run/docker.sock) ;;
-        esac
-        docker run --rm \
-          "${DOCKER_SOCK_MOUNT[@]}" \
-          -v "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}" \
-          -w "${GITHUB_WORKSPACE}" \
-          --env-file "$ENV_FILE" \
-          --entrypoint /bin/ssca-plugin \
-          "$PLUGIN_IMAGE" \
-          github-orchestrate
+      with:
+        plugin_image: ${{ inputs.PLUGIN_IMAGE }}
+        entrypoint: /bin/ssca-plugin
+        command: github-orchestrate
+        source_type: ${{ inputs.SOURCE_TYPE }}
+        oidc_error_message: keyless signing requires permissions id-token write in the calling workflow
