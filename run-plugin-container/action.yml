@@ -1,16 +1,16 @@
 name: 'Run plugin container'
 description: 'Internal composite — GitHub OIDC keyless token and docker run for Harness SSCA plugins'
 inputs:
-  plugin_image:
+  PLUGIN_IMAGE:
     required: true
-  entrypoint:
+  ENTRYPOINT:
     required: true
-  command:
+  COMMAND:
     required: true
-  source_type:
+  SOURCE_TYPE:
     required: false
     default: 'docker'
-  oidc_error_message:
+  OIDC_ERROR_MESSAGE:
     required: false
     default: 'keyless requires permissions id-token write in the calling workflow'
 runs:
@@ -18,15 +18,15 @@ runs:
   steps:
     - shell: bash
       env:
-        PLUGIN_IMAGE: ${{ inputs.plugin_image }}
-        ENTRYPOINT: ${{ inputs.entrypoint }}
-        COMMAND: ${{ inputs.command }}
-        SOURCE_TYPE: ${{ inputs.source_type }}
+        PLUGIN_IMAGE: ${{ inputs.PLUGIN_IMAGE }}
+        ENTRYPOINT: ${{ inputs.ENTRYPOINT }}
+        COMMAND: ${{ inputs.COMMAND }}
+        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
       run: |
         set -euo pipefail
         if [ "${OIDC_PROVIDER:-}" = "non-harness" ]; then
           if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]; then
-            echo "${{ inputs.oidc_error_message }}" >&2
+            echo "${{ inputs.OIDC_ERROR_MESSAGE }}" >&2
             exit 1
           fi
           export PLUGIN_NON_HARNESS_OIDC_TOKEN="$(
@@ -35,11 +35,18 @@ runs:
               "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=harness-fulcio" | jq -r '.value'
           )"
         fi
-        env_file="$(mktemp)"
-        trap 'rm -f "$env_file"' EXIT
-        env | grep -E '^(HARNESS_|GITHUB_|SBOM_|SLSA_|SIGNING_|SOURCE_|PLUGIN_|SSCA_|VAULT_|DOCKER_|ATTEST_|VERIFY_|POLICY_|REPO_|REGISTRY_|KMS_|ARTIFACT_|OIDC_|FULCIO_)' > "$env_file" || true
-        run_args=(--rm -v "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}" -w "${GITHUB_WORKSPACE}" --env-file "$env_file" --entrypoint "${ENTRYPOINT}" "${PLUGIN_IMAGE}" "${COMMAND}")
-        case "${SOURCE_TYPE}" in
-          docker|image) docker run -v /var/run/docker.sock:/var/run/docker.sock "${run_args[@]}" ;;
-          *) docker run "${run_args[@]}" ;;
+        ENV_FILE="$(mktemp)"
+        trap 'rm -f "$ENV_FILE"' EXIT
+        env | grep -E '^(HARNESS_|GITHUB_|SBOM_|SLSA_|SIGNING_|SOURCE_|PLUGIN_|SSCA_|VAULT_|DOCKER_|ATTEST_|VERIFY_|POLICY_|REPO_|REGISTRY_|KMS_|ARTIFACT_|OIDC_|FULCIO_)' > "$ENV_FILE" || true
+        DOCKER_SOCK_MOUNT=()
+        case "${SOURCE_TYPE:-docker}" in
+          docker|image) DOCKER_SOCK_MOUNT=(-v /var/run/docker.sock:/var/run/docker.sock) ;;
         esac
+        docker run --rm \
+          "${DOCKER_SOCK_MOUNT[@]}" \
+          -v "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}" \
+          -w "${GITHUB_WORKSPACE}" \
+          --env-file "$ENV_FILE" \
+          --entrypoint "${ENTRYPOINT}" \
+          "$PLUGIN_IMAGE" \
+          "${COMMAND}"

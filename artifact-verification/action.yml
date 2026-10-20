@@ -53,8 +53,8 @@ runs:
         DOCKER_USERNAME: ${{ inputs.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ inputs.DOCKER_PASSWORD }}
       with:
-        plugin_image: ${{ inputs.PLUGIN_IMAGE }}
-        entrypoint: /bin/ssca-artifact-signing-plugin
-        command: github-verify
-        source_type: ${{ inputs.SOURCE_TYPE }}
-        oidc_error_message: keyless verification requires permissions id-token write in the calling workflow
+        PLUGIN_IMAGE: ${{ inputs.PLUGIN_IMAGE }}
+        ENTRYPOINT: /bin/ssca-artifact-signing-plugin
+        COMMAND: github-verify
+        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
+        OIDC_ERROR_MESSAGE: keyless verification requires permissions id-token write in the calling workflow
