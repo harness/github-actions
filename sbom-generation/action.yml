@@ -61,7 +61,7 @@ runs:
   using: 'composite'
   steps:
     - name: SBOM Generation
-      uses: harness/github-actions/run-plugin-container@SSCA-8414
+      uses: harness/github-actions/run-plugin-container@main
       env:
         ACTION_NAME: 'SBOM Generation'
         HARNESS_ACCOUNT_URL: ${{ inputs.HARNESS_ACCOUNT_URL }}
