@@ -39,6 +39,9 @@ runs:
         case "${SOURCE_TYPE:-docker}" in
           docker|image) DOCKER_SOCK_MOUNT=(-v /var/run/docker.sock:/var/run/docker.sock) ;;
         esac
+        if [ -n "${PLUGIN_SBOMDESTINATION:-}" ] && [ "${PLUGIN_MODE:-}" = "generation" ]; then
+          mkdir -p "${PLUGIN_SBOMDESTINATION}"
+        fi
         docker run --rm \
           "${DOCKER_SOCK_MOUNT[@]}" \
           -v "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}" \
