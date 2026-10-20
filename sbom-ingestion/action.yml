@@ -59,7 +59,6 @@ runs:
         HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
         SBOM_SOURCE: ${{ inputs.SBOM_SOURCE }}
-        SBOM_FILE_PATH: ${{ inputs.SBOM_FILE_PATH }}
         PLUGIN_SBOMDESTINATION: ${{ inputs.SBOM_FILE_PATH }}
         PLUGIN_TYPE: 'github-orchestrate'
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
