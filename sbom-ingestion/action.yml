@@ -1,27 +1,34 @@
 name: 'SBOM Ingestion'
-description: 'Ingest an SBOM and optionally attest via Harness SSCA (Vault KMS or GitHub OIDC keyless)'
+description: 'Github action to generate SBOM for a given artifact'
 author: 'Reetika Mallavarapu'
 inputs:
   HARNESS_ACCOUNT_URL:
+    description: 'Harness Account Url'
     required: true
   HARNESS_ACCOUNT_ID:
+    description: 'Harness Account ID'
     required: true
   HARNESS_ORG_ID:
+    description: 'Harness Organization ID'
     required: true
   HARNESS_PROJECT_ID:
+    description: 'Harness Project ID'
     required: true
   HARNESS_API_KEY:
+    description: 'Auth token for authentication with Harness'
     required: true
   TARGET:
-    description: 'Image or artifact source'
+    description: 'Image or repo source (maps to SBOM_SOURCE for the plugin)'
     required: true
   SBOM_FILE_PATH:
-    description: 'Path to SBOM file to ingest'
+    description: 'SBOM file path'
     required: true
   ATTEST:
+    description: 'If attestation is required'
     required: false
     default: 'false'
   KMS_KEY:
+    description: 'Kms Key'
     required: false
   VAULT_ADDR:
     required: false
@@ -54,6 +61,7 @@ runs:
         SBOM_SOURCE: ${{ inputs.TARGET }}
         SBOM_FILE_PATH: ${{ inputs.SBOM_FILE_PATH }}
         PLUGIN_SBOMDESTINATION: ${{ inputs.SBOM_FILE_PATH }}
+        PLUGIN_TYPE: 'github-orchestrate'
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         PLUGIN_MODE: 'ingestion'
         ATTEST_SBOM: ${{ inputs.ATTEST }}

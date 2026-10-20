@@ -1,6 +1,6 @@
 name: 'Artifact Signing'
-description: 'Sign a container or artifact with Harness artifact signing (Vault KMS or GitHub OIDC keyless)'
-author: 'Harness'
+description: 'Github action to sign a given artifact'
+author: 'Reetika Mallavarapu'
 inputs:
   HARNESS_ACCOUNT_URL:
     required: true

@@ -1,6 +1,6 @@
 name: 'Artifact Verification'
-description: 'Verify artifact signatures (Vault KMS or GitHub OIDC keyless)'
-author: 'Harness'
+description: 'Github action to verify signing for a given artifact'
+author: 'Reetika Mallavarapu'
 inputs:
   HARNESS_ACCOUNT_URL:
     required: true

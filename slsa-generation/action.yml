@@ -1,23 +1,31 @@
 name: 'SLSA Provenance Generation'
-description: 'Generate and attest SLSA provenance (Vault KMS or GitHub OIDC keyless)'
+description: 'Github action to generate SLSA for a given artifact'
 author: 'Reetika Mallavarapu'
 inputs:
   HARNESS_ACCOUNT_URL:
+    description: 'Harness Account Url'
     required: true
   HARNESS_ACCOUNT_ID:
+    description: 'Harness Account ID'
     required: true
   HARNESS_ORG_ID:
+    description: 'Harness Organization ID'
     required: true
   HARNESS_PROJECT_ID:
+    description: 'Harness Project ID'
     required: true
   HARNESS_API_KEY:
+    description: 'Auth token for authentication with Harness'
     required: true
   TARGET:
+    description: 'Image or repo source (maps to SLSA_SOURCE for the plugin)'
     required: true
   ATTEST:
+    description: 'If attestation is required'
     required: false
     default: 'false'
   KMS_KEY:
+    description: 'Kms Key'
     required: false
   VAULT_ADDR:
     required: false
@@ -48,6 +56,7 @@ runs:
         HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
         SLSA_SOURCE: ${{ inputs.TARGET }}
+        PLUGIN_TYPE: 'github-provenance'
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         ATTEST_SLSA: ${{ inputs.ATTEST }}
         KMS_KEY: ${{ inputs.KMS_KEY }}

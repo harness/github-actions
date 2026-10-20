@@ -1,25 +1,34 @@
 name: 'SBOM Policy Enforcement'
-description: 'Verify SBOM attestation and enforce OPA policies (Vault KMS or GitHub OIDC keyless)'
+description: 'Github action to run SBOM Policy Enforcement'
 author: 'Reetika Mallavarapu'
 inputs:
   HARNESS_ACCOUNT_URL:
+    description: 'Harness Account Url'
     required: true
   HARNESS_ACCOUNT_ID:
+    description: 'Harness Account ID'
     required: true
   HARNESS_ORG_ID:
+    description: 'Harness Organization ID'
     required: true
   HARNESS_PROJECT_ID:
+    description: 'Harness Project ID'
     required: true
   HARNESS_API_KEY:
+    description: 'Auth token for authentication with Harness'
     required: true
   TARGET:
+    description: 'Image or repo source (maps to SBOM_SOURCE for the plugin)'
     required: true
   VERIFY:
+    description: 'If verification is required'
     required: false
     default: 'true'
   POLICY_SET_REF:
+    description: 'Policy Set Reference'
     required: false
   KMS_KEY:
+    description: 'Kms Key'
     required: false
   VAULT_ADDR:
     required: false
@@ -50,6 +59,7 @@ runs:
         HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
         SBOM_SOURCE: ${{ inputs.TARGET }}
+        PLUGIN_TYPE: 'github-enforce'
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         VERIFY_SBOM: ${{ inputs.VERIFY }}
         POLICY_SET_REF: ${{ inputs.POLICY_SET_REF }}
