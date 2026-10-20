@@ -52,9 +52,11 @@ To use any of the sub-actions and perform operations successfully, you need the 
 
 3. **Signing**: Use **HashiCorp Vault** (`KMS_KEY`, `VAULT_ADDR`, `VAULT_TOKEN`) **or** **Harness Fulcio keyless** via GitHub OIDC:
    - Workflow: `permissions: id-token: write`
-   - Job env: `FULCIO_URL` (Harness Fulcio gateway, e.g. QA `https://qa0.harness.io/gateway/harness-fulcio`)
+   - Job `env`: `FULCIO_URL` (Harness Fulcio gateway, e.g. QA `https://qa0.harness.io/gateway/harness-fulcio`)
    - Action input: `OIDC_PROVIDER: non-harness` (OIDC audience `harness-fulcio`)
-   - Plugin images default to tag **0.69.0** (`PLUGIN_IMAGE` optional override)
+   - Plugin images are pinned to tag **0.69.0** in each action (not configurable via workflow inputs)
+
+4. **Optional `with:` inputs and job `env`:** Use action inputs for Harness context, `SOURCE_TYPE`, sources (`SBOM_SOURCE` / `SLSA_SOURCE` / `SIGNING_SOURCE`), attestation flags, Vault signing fields, and non-container `ARTIFACT_WORKSPACE`, `ARTIFACT_NAME`, `ARTIFACT_VERSION`. Set **job `env`** for `FULCIO_URL` (keyless) and repository fields (`REPO_URL`, `REPO_PATH`, `REPO_VARIANT`, `REPO_VARIANT_TYPE`, `REPO_CLONED_CODEBASE`) — they are forwarded by `run-plugin-container` and are not action inputs. Plugin subcommand comes from `COMMAND` in `run-plugin-container`; orchestration mode uses `PLUGIN_MODE` (`generation` / `ingestion`) where applicable. Empty optional input values are not passed into the plugin container.
 
 ---
 
@@ -92,7 +94,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 |-----------------|-------------------------|------------------------------------------------------------|-------------|
 | `TOOL`         | `Syft` or `cdxgen`        | The tool used to generate the SBOM.                        | Yes         |
 | `FORMAT`       | `spdx-json` or `cyclonedx-json`| The format of the generated SBOM.                          | Yes         |
-| `SBOM_SOURCE`  | `image_name:image_tag`  | The target artifact (Docker image) for SBOM generation.    | Yes         |
+| `SBOM_SOURCE`  | `image_name:image_tag`  | Target artifact; optional if job `env` sets `SBOM_SOURCE` or `PLUGIN_SBOMSOURCE`. | No          |
 | `ATTEST_SBOM`  | `true` or `false`         | Boolean flag to determine if attestation is required.      | No          |
 | `KMS_KEY`      | `path/to/my/key`        | Path to the Private key used for signing the attestation.          | No          |
 
@@ -116,7 +118,7 @@ The sub-action `harness/github-actions/sbom-ingestion` is responsible for ingest
     HARNESS_API_KEY: ${{ secrets.API_KEY_SAVED_AS_GH_SECRET }}
     VAULT_ADDR: ${{ secrets.VAULT_URL }}
     SBOM_SOURCE: <image>:<tag>
-    SBOM_FILE_PATH: <path_to_sbom_file>
+    PLUGIN_SBOMDESTINATION: <path_to_sbom_file>
     ATTEST_SBOM: true
     KMS_KEY: <path_to_your_key>
 ```
@@ -127,8 +129,8 @@ Make sure to include the required configurations from the [Requirements](#requir
 
 | **Key**           | **Value Example**         | **Description**                                               | **Required** |
 |-------------------|---------------------------|---------------------------------------------------------------|-------------|
-| `SBOM_SOURCE`     | `example_image:latest`    | The target artifact (Docker image) for SBOM ingestion.        | Yes         |
-| `SBOM_FILE_PATH`  | `path/to/sbom.json`       | The file path to the SBOM that needs to be ingested.          | Yes         |
+| `SBOM_SOURCE`     | `example_image:latest`    | Target artifact; optional if job `env` sets `SBOM_SOURCE` or `PLUGIN_SBOMSOURCE`. | No          |
+| `PLUGIN_SBOMDESTINATION`  | `path/to/sbom.json`       | Path to the SBOM file to ingest (`PLUGIN_SBOMDESTINATION`).          | Yes         |
 | `ATTEST_SBOM`     | `true` or `false`           | Boolean flag to determine if attestation is required.         | No          |
 | `KMS_KEY`         | `path/to/your/key`        | Path to the Private key used for signing the attestation.             | No          |
 
@@ -162,7 +164,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 
 | **Key**            | **Value Example**            | **Description**                                                                 | **Required** |
 |--------------------|------------------------------|---------------------------------------------------------------------------------|-------------|
-| `SBOM_SOURCE`      | `example_image:latest`       | The target artifact (Docker image) for SBOM verification and policy enforcement.| Yes         |
+| `SBOM_SOURCE`      | `example_image:latest`       | Target artifact; optional if job `env` sets `SBOM_SOURCE` or `PLUGIN_SBOMSOURCE`. | No          |
 | `VERIFY_SBOM`      | `true` or `false`              | Boolean flag to determine if attestation verification is required.              | Yes         |
 | `POLICY_SET_REF`   | `github_opa_policy`          | The reference to the Harness SBOM policy set to be enforced.                    | Yes         |
 | `KMS_KEY`          | `path/to/your/key`           | Path to the Public key used for verifying the attestation.                             | Yes          |

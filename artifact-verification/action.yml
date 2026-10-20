@@ -12,9 +12,13 @@ inputs:
     required: true
   HARNESS_API_KEY:
     required: true
+  SOURCE_TYPE:
+    description: 'Source or registry type: docker, acr, gcr, ecr, gar, har, local, repository. Default docker.'
+    required: false
+    default: 'docker'
   SIGNING_SOURCE:
-    description: 'Image or repo source'
-    required: true
+    description: 'Image, file path, or repo identifier.'
+    required: false
   KMS_KEY:
     required: false
   VAULT_ADDR:
@@ -23,11 +27,11 @@ inputs:
     required: false
   OIDC_PROVIDER:
     required: false
-  PLUGIN_IMAGE:
-    default: 'harness/ssca-artifact-signing-plugin:0.69.0'
+  ARTIFACT_WORKSPACE:
     required: false
-  SOURCE_TYPE:
-    default: 'docker'
+  ARTIFACT_NAME:
+    required: false
+  ARTIFACT_VERSION:
     required: false
   DOCKER_USERNAME:
     required: false
@@ -44,15 +48,18 @@ runs:
         HARNESS_ORG_ID: ${{ inputs.HARNESS_ORG_ID }}
         HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
         HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
+        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
         SIGNING_SOURCE: ${{ inputs.SIGNING_SOURCE }}
         KMS_KEY: ${{ inputs.KMS_KEY }}
         VAULT_ADDR: ${{ inputs.VAULT_ADDR }}
         VAULT_TOKEN: ${{ inputs.VAULT_TOKEN }}
         OIDC_PROVIDER: ${{ inputs.OIDC_PROVIDER }}
+        ARTIFACT_WORKSPACE: ${{ inputs.ARTIFACT_WORKSPACE }}
+        ARTIFACT_NAME: ${{ inputs.ARTIFACT_NAME }}
+        ARTIFACT_VERSION: ${{ inputs.ARTIFACT_VERSION }}
         DOCKER_USERNAME: ${{ inputs.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ inputs.DOCKER_PASSWORD }}
       with:
-        PLUGIN_IMAGE: ${{ inputs.PLUGIN_IMAGE }}
+        PLUGIN_IMAGE: harness/ssca-artifact-signing-plugin:0.69.0
         ENTRYPOINT: /bin/ssca-artifact-signing-plugin
         COMMAND: github-verify
-        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}

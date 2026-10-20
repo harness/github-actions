@@ -7,9 +7,6 @@ inputs:
     required: true
   COMMAND:
     required: true
-  SOURCE_TYPE:
-    required: false
-    default: 'docker'
   OIDC_ERROR_MESSAGE:
     required: false
     default: 'keyless signing requires permissions id-token write in the calling workflow'
@@ -21,7 +18,6 @@ runs:
         PLUGIN_IMAGE: ${{ inputs.PLUGIN_IMAGE }}
         ENTRYPOINT: ${{ inputs.ENTRYPOINT }}
         COMMAND: ${{ inputs.COMMAND }}
-        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
       run: |
         set -euo pipefail
         if [ "${OIDC_PROVIDER:-}" = "non-harness" ]; then
@@ -37,7 +33,8 @@ runs:
         fi
         ENV_FILE="$(mktemp)"
         trap 'rm -f "$ENV_FILE"' EXIT
-        env | grep -E '^(HARNESS_|GITHUB_|SBOM_|SLSA_|SIGNING_|SOURCE_|PLUGIN_|SSCA_|VAULT_|DOCKER_|ATTEST_|VERIFY_|POLICY_|REPO_|REGISTRY_|KMS_|ARTIFACT_|OIDC_|FULCIO_)' > "$ENV_FILE" || true
+        env | grep -E '^(HARNESS_|GITHUB_|SBOM_|SLSA_|SIGNING_|SOURCE_|PLUGIN_|SSCA_|VAULT_|DOCKER_|ATTEST_|VERIFY_|POLICY_|REPO_|REGISTRY_|KMS_|ARTIFACT_|OIDC_|FULCIO_)' \
+          | grep -Ev '^[A-Z0-9_]+=$' > "$ENV_FILE" || true
         DOCKER_SOCK_MOUNT=()
         case "${SOURCE_TYPE:-docker}" in
           docker|image) DOCKER_SOCK_MOUNT=(-v /var/run/docker.sock:/var/run/docker.sock) ;;
