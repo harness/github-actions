@@ -26,6 +26,8 @@ All operations performed by these sub-actions save generated artifacts and detai
 | [SBOM Verification and Policy Enforcement](#sbom-verification-and-policy-enforcement)   | `harness/github-actions/sbom-policy-enforcement` |
 | [SLSA Provenance Generation and Attestation](#slsa-provenance-generation-and-attestation)             | `harness/github-actions/slsa-generation` |
 | [SLSA Provenance Verification](#slsa-provenance-verification)               | `harness/github-actions/slsa-verification` |
+| Artifact signing | `harness/github-actions/artifact-signing` |
+| Artifact verification | `harness/github-actions/artifact-verification` |
 
 Each of these actions has its own configurations. Refer to the specific sections for detailed instructions and examples.
 
@@ -48,7 +50,11 @@ To use any of the sub-actions and perform operations successfully, you need the 
 | `HARNESS_API_KEY`       | `${{ secrets.SCS_API_KEY }}`                | The API key for authenticating with Harness. Create an API key using a Service Account (recommended) or a Personal Account , and then add the key to GitHub Actions Secrets with "HARNESS_API_KEY" as the key name. | Yes         |
 | `VAULT_ADDR`   | `https://myvault.example.com`               | The URL of your Vault.	                                     | No         |
 
-3. **Security Keys**: For attestation generation and verification, Key pair is required. The key should be generated using Cosign of type `ecdsa-P256`. Currently, HashiCorp Vault is supported for storing and retrieving the key. Additional Key Management Services (KMS) will be supported in the future.
+3. **Signing**: Use **HashiCorp Vault** (`KMS_KEY`, `VAULT_ADDR`, `VAULT_TOKEN`) **or** **Harness Fulcio keyless** via GitHub OIDC:
+   - Workflow: `permissions: id-token: write`
+   - Job env: `FULCIO_URL` (Harness Fulcio gateway, e.g. QA `https://qa0.harness.io/gateway/harness-fulcio`)
+   - Action input: `OIDC_PROVIDER: non-harness` (OIDC audience `harness-fulcio`)
+   - Plugin images default to tag **0.69.0** (`PLUGIN_IMAGE` optional override)
 
 ---
 

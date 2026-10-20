@@ -1,0 +1,84 @@
+name: 'Artifact Signing'
+description: 'Sign a container or artifact with Harness artifact signing (Vault KMS or GitHub OIDC keyless)'
+author: 'Harness'
+inputs:
+  HARNESS_ACCOUNT_URL:
+    required: true
+  HARNESS_ACCOUNT_ID:
+    required: true
+  HARNESS_ORG_ID:
+    required: true
+  HARNESS_PROJECT_ID:
+    required: true
+  HARNESS_API_KEY:
+    required: true
+  TARGET:
+    description: 'Container image or artifact to sign'
+    required: true
+  KMS_KEY:
+    required: false
+  VAULT_ADDR:
+    required: false
+  VAULT_TOKEN:
+    required: false
+  OIDC_PROVIDER:
+    required: false
+  PLUGIN_IMAGE:
+    default: 'harness/ssca-artifact-signing-plugin:0.69.0'
+    required: false
+  SOURCE_TYPE:
+    default: 'docker'
+    required: false
+  DOCKER_USERNAME:
+    required: false
+  DOCKER_PASSWORD:
+    required: false
+runs:
+  using: 'composite'
+  steps:
+    - name: Artifact Signing
+      shell: bash
+      env:
+        HARNESS_ACCOUNT_URL: ${{ inputs.HARNESS_ACCOUNT_URL }}
+        HARNESS_ACCOUNT_ID: ${{ inputs.HARNESS_ACCOUNT_ID }}
+        HARNESS_ORG_ID: ${{ inputs.HARNESS_ORG_ID }}
+        HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
+        HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
+        SIGNING_SOURCE: ${{ inputs.TARGET }}
+        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
+        KMS_KEY: ${{ inputs.KMS_KEY }}
+        VAULT_ADDR: ${{ inputs.VAULT_ADDR }}
+        VAULT_TOKEN: ${{ inputs.VAULT_TOKEN }}
+        OIDC_PROVIDER: ${{ inputs.OIDC_PROVIDER }}
+        DOCKER_USERNAME: ${{ inputs.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ inputs.DOCKER_PASSWORD }}
+      run: |
+        set -euo pipefail
+        if [ "${OIDC_PROVIDER:-}" = "non-harness" ]; then
+          if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]; then
+            echo "keyless signing requires permissions id-token write in the calling workflow" >&2
+            exit 1
+          fi
+          PLUGIN_NON_HARNESS_OIDC_TOKEN="$(curl -sSf \
+            -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=harness-fulcio" | jq -r '.value')"
+          export PLUGIN_NON_HARNESS_OIDC_TOKEN
+        fi
+        PLUGIN_IMAGE="${{ inputs.PLUGIN_IMAGE }}"
+        ENV_FILE="$(mktemp)"
+        env | grep -E '^(HARNESS_|SIGNING_|SOURCE_|PLUGIN_|SSCA_|VAULT_|DOCKER_|KMS_|OIDC_|FULCIO_)' > "$ENV_FILE" || true
+        if [ -n "${PLUGIN_NON_HARNESS_OIDC_TOKEN:-}" ]; then
+          echo "PLUGIN_NON_HARNESS_OIDC_TOKEN=${PLUGIN_NON_HARNESS_OIDC_TOKEN}" >> "$ENV_FILE"
+        fi
+        DOCKER_SOCK_MOUNT=()
+        case "${SOURCE_TYPE:-docker}" in
+          docker|image) DOCKER_SOCK_MOUNT=(-v /var/run/docker.sock:/var/run/docker.sock) ;;
+        esac
+        docker run --rm \
+          "${DOCKER_SOCK_MOUNT[@]}" \
+          -v "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}" \
+          -w "${GITHUB_WORKSPACE}" \
+          --env-file "$ENV_FILE" \
+          --entrypoint /bin/ssca-artifact-signing-plugin \
+          "$PLUGIN_IMAGE" \
+          github-sign
