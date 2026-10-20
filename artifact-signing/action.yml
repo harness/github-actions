@@ -41,7 +41,7 @@ runs:
   using: 'composite'
   steps:
     - name: Artifact Signing
-      uses: ./run-plugin-container
+      uses: harness/github-actions/run-plugin-container@SSCA-8414
       env:
         HARNESS_ACCOUNT_URL: ${{ inputs.HARNESS_ACCOUNT_URL }}
         HARNESS_ACCOUNT_ID: ${{ inputs.HARNESS_ACCOUNT_ID }}
