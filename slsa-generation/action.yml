@@ -20,7 +20,7 @@ inputs:
   SLSA_SOURCE:
     description: 'Image or repo source'
     required: true
-  ATTEST:
+  ATTEST_SLSA:
     description: 'If attestation is required'
     required: false
     default: 'false'
@@ -58,7 +58,7 @@ runs:
         SLSA_SOURCE: ${{ inputs.SLSA_SOURCE }}
         PLUGIN_TYPE: 'github-provenance'
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
-        ATTEST_SLSA: ${{ inputs.ATTEST }}
+        ATTEST_SLSA: ${{ inputs.ATTEST_SLSA }}
         KMS_KEY: ${{ inputs.KMS_KEY }}
         VAULT_ADDR: ${{ inputs.VAULT_ADDR }}
         VAULT_TOKEN: ${{ inputs.VAULT_TOKEN }}

@@ -20,7 +20,7 @@ inputs:
   SLSA_SOURCE:
     description: 'Image or repo source'
     required: true
-  VERIFY:
+  VERIFY_SLSA:
     description: 'If verification is required'
     required: false
     default: 'true'
@@ -58,7 +58,7 @@ runs:
         SLSA_SOURCE: ${{ inputs.SLSA_SOURCE }}
         PLUGIN_TYPE: 'github-slsa-verification'
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
-        VERIFY_SLSA: ${{ inputs.VERIFY }}
+        VERIFY_SLSA: ${{ inputs.VERIFY_SLSA }}
         KMS_KEY: ${{ inputs.KMS_KEY }}
         VAULT_ADDR: ${{ inputs.VAULT_ADDR }}
         VAULT_TOKEN: ${{ inputs.VAULT_TOKEN }}

@@ -80,7 +80,7 @@ The sub-action `harness/github-actions/sbom-generation` is responsible for gener
     SBOM_SOURCE: example_image:image_tag
     TOOL: Syft
     FORMAT: spdx-json
-    ATTEST: true
+    ATTEST_SBOM: true
     KMS_KEY: path_to_my_key_in_vault
 ```
 
@@ -93,7 +93,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 | `TOOL`         | `Syft` or `cdxgen`        | The tool used to generate the SBOM.                        | Yes         |
 | `FORMAT`       | `spdx-json` or `cyclonedx-json`| The format of the generated SBOM.                          | Yes         |
 | `SBOM_SOURCE`  | `image_name:image_tag`  | The target artifact (Docker image) for SBOM generation.    | Yes         |
-| `ATTEST`       | `true` or `false`         | Boolean flag to determine if attestation is required.      | No          |
+| `ATTEST_SBOM`  | `true` or `false`         | Boolean flag to determine if attestation is required.      | No          |
 | `KMS_KEY`      | `path/to/my/key`        | Path to the Private key used for signing the attestation.          | No          |
 
 ## SBOM Ingestion and Attestation
@@ -117,7 +117,7 @@ The sub-action `harness/github-actions/sbom-ingestion` is responsible for ingest
     VAULT_ADDR: ${{ secrets.VAULT_URL }}
     SBOM_SOURCE: <image>:<tag>
     SBOM_FILE_PATH: <path_to_sbom_file>
-    ATTEST: true
+    ATTEST_SBOM: true
     KMS_KEY: <path_to_your_key>
 ```
 
@@ -129,7 +129,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 |-------------------|---------------------------|---------------------------------------------------------------|-------------|
 | `SBOM_SOURCE`     | `example_image:latest`    | The target artifact (Docker image) for SBOM ingestion.        | Yes         |
 | `SBOM_FILE_PATH`  | `path/to/sbom.json`       | The file path to the SBOM that needs to be ingested.          | Yes         |
-| `ATTEST`          | `true` or `false`           | Boolean flag to determine if attestation is required.         | No          |
+| `ATTEST_SBOM`     | `true` or `false`           | Boolean flag to determine if attestation is required.         | No          |
 | `KMS_KEY`         | `path/to/your/key`        | Path to the Private key used for signing the attestation.             | No          |
 
 
@@ -151,7 +151,7 @@ The sub-action `harness/github-actions/sbom-policy-enforcement` verifies the SBO
     HARNESS_API_KEY: ${{ secrets.API_KEY_SAVED_AS_GH_SECRET }}
     VAULT_ADDR: ${{ secrets.VAULT_URL }}
     SBOM_SOURCE: example_image:latest
-    VERIFY: true
+    VERIFY_SBOM: true
     POLICY_SET_REF: github_opa_policy
     KMS_KEY: path/to/your/key
 ```
@@ -163,7 +163,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 | **Key**            | **Value Example**            | **Description**                                                                 | **Required** |
 |--------------------|------------------------------|---------------------------------------------------------------------------------|-------------|
 | `SBOM_SOURCE`      | `example_image:latest`       | The target artifact (Docker image) for SBOM verification and policy enforcement.| Yes         |
-| `VERIFY`           | `true` or `false`              | Boolean flag to determine if attestation verification is required.              | Yes         |
+| `VERIFY_SBOM`      | `true` or `false`              | Boolean flag to determine if attestation verification is required.              | Yes         |
 | `POLICY_SET_REF`   | `github_opa_policy`          | The reference to the Harness SBOM policy set to be enforced.                    | Yes         |
 | `KMS_KEY`          | `path/to/your/key`           | Path to the Public key used for verifying the attestation.                             | Yes          |
 
@@ -187,7 +187,7 @@ The sub-action `harness/github-actions/slsa-generation` is responsible for gener
     HARNESS_API_KEY: ${{ secrets.API_KEY_SAVED_AS_GH_SECRET }}
     VAULT_ADDR: ${{ secrets.VAULT_URL }}
     SLSA_SOURCE: example_image:latest
-    ATTEST: true
+    ATTEST_SLSA: true
     KMS_KEY: path/to/your/key
 ```
 
@@ -198,7 +198,7 @@ Make sure to include the required configurations from the [Requirements](#requir
 | **Key**           | **Value Example**         | **Description**                                                                      | **Required** |
 |-------------------|---------------------------|--------------------------------------------------------------------------------------|-------------|
 | `SLSA_SOURCE`     | `example_image:latest`    | The target artifact (Docker image) for generating SLSA provenance.                  | Yes         |
-| `ATTEST`          | `true` or `false`           | Boolean flag to determine if attestation is required.                               | No          |
+| `ATTEST_SLSA`     | `true` or `false`           | Boolean flag to determine if attestation is required.                               | No          |
 | `KMS_KEY`         | `path/to/your/key`        | Path to the Private key used for signing the attestation.                                   | No          |
 
 
@@ -220,7 +220,7 @@ The sub-action `harness/github-actions/slsa-verification` verifies the SLSA prov
     HARNESS_API_KEY: ${{ secrets.API_KEY_SAVED_AS_GH_SECRET }}
     VAULT_ADDR: ${{ secrets.VAULT_URL }}
     SLSA_SOURCE: example_image:latest
-    VERIFY: true
+    VERIFY_SLSA: true
     KMS_KEY: path/to/your/key
 ```
 
@@ -231,5 +231,5 @@ Make sure to include the required configurations from the [Requirements](#requir
 | **Key**           | **Value Example**         | **Description**                                                                           | **Required** |
 |-------------------|---------------------------|-------------------------------------------------------------------------------------------|-------------|
 | `SLSA_SOURCE`     | `example_image:latest`    | The target artifact (Docker image) for which SLSA provenance verification is performed.  | Yes         |
-| `VERIFY`          | `true` or `false`           | Boolean flag to determine if verification is required.                                    | Yes         |
+| `VERIFY_SLSA`     | `true` or `false`           | Boolean flag to determine if verification is required.                                    | Yes         |
 | `KMS_KEY`         | `path/to/your/key`        | Path to the public key used for verifying the attestation.                                | No          |

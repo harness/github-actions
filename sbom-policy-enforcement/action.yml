@@ -20,7 +20,7 @@ inputs:
   SBOM_SOURCE:
     description: 'Image or repo source'
     required: true
-  VERIFY:
+  VERIFY_SBOM:
     description: 'If verification is required'
     required: false
     default: 'true'
@@ -61,7 +61,7 @@ runs:
         SBOM_SOURCE: ${{ inputs.SBOM_SOURCE }}
         PLUGIN_TYPE: 'github-enforce'
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
-        VERIFY_SBOM: ${{ inputs.VERIFY }}
+        VERIFY_SBOM: ${{ inputs.VERIFY_SBOM }}
         POLICY_SET_REF: ${{ inputs.POLICY_SET_REF }}
         KMS_KEY: ${{ inputs.KMS_KEY }}
         VAULT_ADDR: ${{ inputs.VAULT_ADDR }}
