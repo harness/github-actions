@@ -82,4 +82,3 @@ runs:
         ENTRYPOINT: /bin/ssca-plugin
         COMMAND: github-orchestrate
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
-        OIDC_ERROR_MESSAGE: keyless signing requires permissions id-token write in the calling workflow

@@ -12,7 +12,7 @@ inputs:
     default: 'docker'
   OIDC_ERROR_MESSAGE:
     required: false
-    default: 'keyless requires permissions id-token write in the calling workflow'
+    default: 'keyless signing requires permissions id-token write in the calling workflow'
 runs:
   using: 'composite'
   steps:

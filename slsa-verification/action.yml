@@ -70,4 +70,3 @@ runs:
         ENTRYPOINT: /bin/slsa-plugin
         COMMAND: github-slsa-verification
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
-        OIDC_ERROR_MESSAGE: keyless verification requires permissions id-token write in the calling workflow

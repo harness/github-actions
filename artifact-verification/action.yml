@@ -57,4 +57,3 @@ runs:
         ENTRYPOINT: /bin/ssca-artifact-signing-plugin
         COMMAND: github-verify
         SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
-        OIDC_ERROR_MESSAGE: keyless verification requires permissions id-token write in the calling workflow
