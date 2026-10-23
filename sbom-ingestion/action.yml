@@ -1,5 +1,5 @@
 name: 'SBOM Ingestion'
-description: 'Github action to generate SBOM for a given artifact'
+description: 'Github action to ingest SBOM for a given artifact'
 author: 'Reetika Mallavarapu'
 inputs:
   HARNESS_ACCOUNT_URL:
@@ -17,35 +17,65 @@ inputs:
   HARNESS_API_KEY:
     description: 'Auth token for authentication with Harness'
     required: true
-  TARGET:
-    description: 'Image or repo source'
-    required: true
-  SBOM_FILE_PATH:
-    description: 'SBOM file path'
-    required: true
-  ATTEST:
-    description: 'If attestation is required'
-    type: boolean
-  KMS_KEY:
-    description: 'Kms Key'
+  SOURCE_TYPE:
+    description: 'Source or registry type: docker, acr, gcr, ecr, gar, har, local, repository. Default docker.'
     required: false
-
+    default: 'docker'
+  SBOM_SOURCE:
+    description: 'Image, file path, or repo identifier.'
+    required: false
+  PLUGIN_SBOMDESTINATION:
+    description: 'Path to the SBOM file to ingest (PLUGIN_SBOMDESTINATION).'
+    required: false
+  ATTEST_SBOM:
+    description: 'If attestation is required'
+    required: false
+    default: 'false'
+  KMS_KEY:
+    required: false
+  VAULT_ADDR:
+    required: false
+  VAULT_TOKEN:
+    required: false
+  OIDC_PROVIDER:
+    required: false
+  ARTIFACT_WORKSPACE:
+    required: false
+  ARTIFACT_NAME:
+    required: false
+  ARTIFACT_VERSION:
+    required: false
+  DOCKER_USERNAME:
+    required: false
+  DOCKER_PASSWORD:
+    required: false
 runs:
-  using: 'docker'
-  image: 'docker://harness/ssca-plugin:github'
-  entrypoint: '/bin/ssca-plugin'
-  args: 
-   - github-orchestrate
-  env:
-    ACTION_NAME: 'SBOM Ingestion'
-    HARNESS_ACCOUNT_URL: ${{ inputs.HARNESS_ACCOUNT_URL }}
-    HARNESS_ACCOUNT_ID: ${{ inputs.HARNESS_ACCOUNT_ID }}
-    HARNESS_ORG_ID: ${{ inputs.HARNESS_ORG_ID }}
-    HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
-    HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
-    SBOM_SOURCE: ${{ inputs.TARGET }}
-    SBOM_FILE_PATH: ${{ inputs.SBOM_FILE_PATH }}
-    PLUGIN_TYPE: 'github-orchestrate'
-    PLUGIN_MODE: 'ingestion'
-    ATTEST_SBOM: ${{ inputs.ATTEST }}
-    KMS_KEY: ${{ inputs.KMS_KEY }}
+  using: 'composite'
+  steps:
+    - name: SBOM Ingestion
+      uses: harness/github-actions/run-plugin-container@SSCA-8414
+      env:
+        ACTION_NAME: 'SBOM Ingestion'
+        HARNESS_ACCOUNT_URL: ${{ inputs.HARNESS_ACCOUNT_URL }}
+        HARNESS_ACCOUNT_ID: ${{ inputs.HARNESS_ACCOUNT_ID }}
+        HARNESS_ORG_ID: ${{ inputs.HARNESS_ORG_ID }}
+        HARNESS_PROJECT_ID: ${{ inputs.HARNESS_PROJECT_ID }}
+        HARNESS_API_KEY: ${{ inputs.HARNESS_API_KEY }}
+        SOURCE_TYPE: ${{ inputs.SOURCE_TYPE }}
+        SBOM_SOURCE: ${{ inputs.SBOM_SOURCE }}
+        PLUGIN_SBOMDESTINATION: ${{ inputs.PLUGIN_SBOMDESTINATION }}
+        PLUGIN_MODE: 'ingestion'
+        ATTEST_SBOM: ${{ inputs.ATTEST_SBOM }}
+        KMS_KEY: ${{ inputs.KMS_KEY }}
+        VAULT_ADDR: ${{ inputs.VAULT_ADDR }}
+        VAULT_TOKEN: ${{ inputs.VAULT_TOKEN }}
+        OIDC_PROVIDER: ${{ inputs.OIDC_PROVIDER }}
+        ARTIFACT_WORKSPACE: ${{ inputs.ARTIFACT_WORKSPACE }}
+        ARTIFACT_NAME: ${{ inputs.ARTIFACT_NAME }}
+        ARTIFACT_VERSION: ${{ inputs.ARTIFACT_VERSION }}
+        DOCKER_USERNAME: ${{ inputs.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ inputs.DOCKER_PASSWORD }}
+      with:
+        PLUGIN_IMAGE: harness/ssca-plugin:0.70.0
+        ENTRYPOINT: /bin/ssca-plugin
+        COMMAND: github-orchestrate

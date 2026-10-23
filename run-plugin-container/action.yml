@@ -1,0 +1,52 @@
+name: 'Run plugin container'
+description: 'Internal composite — GitHub OIDC keyless token and docker run for Harness SSCA plugins'
+inputs:
+  PLUGIN_IMAGE:
+    required: true
+  ENTRYPOINT:
+    required: true
+  COMMAND:
+    required: true
+  OIDC_ERROR_MESSAGE:
+    required: false
+    default: 'keyless signing requires permissions id-token write in the calling workflow'
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      env:
+        PLUGIN_IMAGE: ${{ inputs.PLUGIN_IMAGE }}
+        ENTRYPOINT: ${{ inputs.ENTRYPOINT }}
+        COMMAND: ${{ inputs.COMMAND }}
+      run: |
+        set -euo pipefail
+        if [ "${OIDC_PROVIDER:-}" = "non-harness" ]; then
+          if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]; then
+            echo "${{ inputs.OIDC_ERROR_MESSAGE }}" >&2
+            exit 1
+          fi
+          export PLUGIN_NON_HARNESS_OIDC_TOKEN="$(
+            curl -sSf \
+              -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+              "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=harness-fulcio" | jq -r '.value'
+          )"
+        fi
+        ENV_FILE="$(mktemp)"
+        trap 'rm -f "$ENV_FILE"' EXIT
+        env | grep -E '^(HARNESS_|GITHUB_|SBOM_|SLSA_|SIGNING_|SOURCE_|PLUGIN_|SSCA_|VAULT_|DOCKER_|ATTEST_|VERIFY_|POLICY_|REPO_|REGISTRY_|KMS_|ARTIFACT_|OIDC_|FULCIO_)' \
+          | grep -Ev '^[A-Z0-9_]+=$' > "$ENV_FILE" || true
+        DOCKER_SOCK_MOUNT=()
+        case "${SOURCE_TYPE:-docker}" in
+          docker|image) DOCKER_SOCK_MOUNT=(-v /var/run/docker.sock:/var/run/docker.sock) ;;
+        esac
+        if [ -n "${PLUGIN_SBOMDESTINATION:-}" ] && [ "${PLUGIN_MODE:-}" = "generation" ]; then
+          mkdir -p "${PLUGIN_SBOMDESTINATION}"
+        fi
+        docker run --rm \
+          "${DOCKER_SOCK_MOUNT[@]}" \
+          -v "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}" \
+          -w "${GITHUB_WORKSPACE}" \
+          --env-file "$ENV_FILE" \
+          --entrypoint "${ENTRYPOINT}" \
+          "$PLUGIN_IMAGE" \
+          "${COMMAND}"
