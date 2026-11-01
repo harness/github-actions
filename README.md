@@ -36,7 +36,7 @@ Each action is a **root-level composite** in this repository (for example `sbom-
 
 Internal helper (not intended for direct use in customer workflows): [`run-plugin-container`](run-plugin-container/action.yml) — OIDC token fetch, env filtering, and `docker run` for the pinned plugin image.
 
-**Plugin image:** `harness/ssca-plugin:0.70.0` (fixed inside each action).
+**Plugin images (pinned in each action):** `harness/ssca-plugin:0.70.0`, `harness/slsa-plugin:0.70.0`, and `harness/ssca-artifact-signing-plugin:0.70.0`.
 
 **Version pin:** use a release tag (for example `@1.2.0`) or `@main` while validating; avoid floating refs in production.
 
