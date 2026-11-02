@@ -33,10 +33,11 @@ Each action is a **root-level composite** in this repository (for example `sbom-
 | SLSA verification | [`slsa-verification`](slsa-verification/action.yml) | `github-verify` |
 | Artifact signing | [`artifact-signing`](artifact-signing/action.yml) | `github-sign` |
 | Artifact verification | [`artifact-verification`](artifact-verification/action.yml) | `github-verify` |
+| STO security scan | [`security-scan`](security-scan/action.yml) | `harness/<scanner>-job-runner` |
 
-Internal helper (not intended for direct use in customer workflows): [`run-plugin-container`](run-plugin-container/action.yml) — OIDC token fetch, env filtering, and `docker run` for the pinned plugin image.
+Internal helper (not intended for direct use in customer workflows): [`run-plugin-container`](run-plugin-container/action.yml) — OIDC token fetch, env filtering, and `docker run` for the pinned plugin image. Used by the SSCA actions above, not by `security-scan`.
 
-**Plugin images (pinned in each action):** `harness/ssca-plugin:0.71.0`, `harness/slsa-plugin:0.71.0`, and `harness/ssca-artifact-signing-plugin:0.71.0`.
+**Plugin images (pinned in each SSCA action):** `harness/ssca-plugin:0.71.0`, `harness/slsa-plugin:0.71.0`, and `harness/ssca-artifact-signing-plugin:0.71.0`. `security-scan` pulls `harness/<scanner>-job-runner` at the `docker-image-tag` input (default `latest`).
 
 **Version pin:** use a release tag (for example `@1.2.0`) or `@main` while validating; avoid floating refs in production.
 
